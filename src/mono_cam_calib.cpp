@@ -120,30 +120,52 @@ void setCalibEnv::calibRawimage(const sensor_msgs::Image::ConstPtr &msg) {
     }
 
     // COMPLETE #1 : Convert to Json
-    // TODO : use templete and make function
-    Json::Value root;
-    for (int i = 0; i < cameraMatrix.rows; i++) {
-        for (int j = 0; j < cameraMatrix.cols; j++) {
-            root["intrinsic"][i].append(cameraMatrix.at<double>(i, j));
+    if (result_file_type_ == "json") {
+        Json::Value intrinsic_json;
+        for (int i = 0; i < cameraMatrix.rows; i++) {
+            for (int j = 0; j < cameraMatrix.cols; j++) {
+                intrinsic_json["intrinsic"][i].append(cameraMatrix.at<double>(i, j));
+            }
         }
+        for (int i = 0; i < distCoeffs.rows; i++) {
+            for (int j = 0; j < distCoeffs.cols; j++) {
+                intrinsic_json["distortion"][i].append(distCoeffs.at<double>(i, j));
+            }
+        }
+        Json::Value RT_json;
+        for (int i = 0; i < R.rows; i++) {
+            for (int j = 0; j < R.cols; j++) {
+                RT_json["R"][i].append(R.at<double>(i, j));
+            }
+        }
+        for (int i = 0; i < T.rows; i++) {
+            for (int j = 0; j < T.cols; j++) {
+                RT_json["T"][i].append(T.at<double>(i, j));
+            }
+        }
+
+        Json::StyledWriter writer;
+        auto str = writer.write(intrinsic_json);
+        std::ofstream intrinsic_file(result_file_intrinsic_ + "intrinsic_param.json", std::ofstream::out | std::ofstream::trunc);
+        intrinsic_file << str;
+        intrinsic_file.close();
+
+        str = writer.write(RT_json);
+        std::ofstream RT_file(result_file_RT_ + "RT.json", std::ofstream::out | std::ofstream::trunc);
+        RT_file << str;
+        RT_file.close();
+
+    } else if (result_file_type_ == "txt") {
+        std::ofstream results;
+        results.open(result_file_intrinsic_ + "intrinsic_param.txt", std::ofstream::out | std::ofstream::trunc);
+        results << cameraMatrix << "\n"
+                << distCoeffs;
+        results.close();
+        results.open(result_file_RT_ + "RT.txt", std::ofstream::out | std::ofstream::trunc);
+        results << R << "\n======\n"
+                << T;
+        results.close();
     }
-
-    Json::StyledWriter writer;
-    auto str = writer.write(root);
-
-    std::ofstream output_file(result_file_intrinsic_ + "intrinsic_param.json", std::ofstream::out | std::ofstream::trunc);
-    output_file << str;
-    output_file.close();
-
-    std::ofstream results;
-    results.open(result_file_intrinsic_ + "intrinsic_param.txt", std::ofstream::out | std::ofstream::trunc);
-    results << cameraMatrix << "\n"
-            << distCoeffs;
-    results.close();
-    results.open(result_file_RT_ + "RT.txt", std::ofstream::out | std::ofstream::trunc);
-    results << R << "\n======\n"
-            << T;
-    results.close();
 }
 
 int main(int argc, char *argv[]) {

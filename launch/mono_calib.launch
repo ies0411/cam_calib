@@ -11,6 +11,7 @@
   	<param name = "image_sub_name" type="string" value="/pylon_camera_node/image_raw"/>
     <param name = "Intrinsic_debug" type="bool" value="true"/>
     <param name = "RT_debug" type="bool" value="false"/>
+		<param name = "result_file_type" type="string" value="json"/>
 
   </node>
 </launch>

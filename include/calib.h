@@ -48,8 +48,8 @@ class setCalibEnv {
     ros::Subscriber image_sub_;
 
     int checkerboard_rows_num_, checkerboard_colm_num_;
-    std::string image_sub_name_, result_file_intrinsic_, result_file_RT_;
-    double dx_, dy_;  // MEMO . unit : mm
+    std::string image_sub_name_, result_file_intrinsic_, result_file_RT_, result_file_type_;  // MEMO, result file type : 1. json, 2.txt
+    double dx_, dy_;                                                                          // MEMO . unit : mm
     int view_cnt_ = 0, view_num_threshold_ = 0;
     bool finish_ = false, RT_debug_, intrinsic_debug_;
     std::vector<double> x_movement_DB_, y_movement_DB_, z_movement_DB_, rot_movement_DB_;
@@ -104,12 +104,13 @@ void setCalibEnv::getParamFunc(ros::NodeHandle &priv_nh) {
     priv_nh.param<double>("dx", dx_, 61.5);
     priv_nh.param<double>("dy", dy_, 61.5);
     priv_nh.param<std::string>("image_sub_name", image_sub_name_, "/pylon_camera_node/image_raw");
-    priv_nh.param<int>("view_num", view_num_threshold_, 1);
+    priv_nh.param<int>("view_num", view_num_threshold_, 3);
 
     priv_nh.param<bool>("RT_debug", RT_debug_, false);
     priv_nh.param<bool>("Intrinsic_debug", intrinsic_debug_, true);
+    priv_nh.param<std::string>("result_file_type", result_file_type_, std::string("json"));
     priv_nh.param<std::string>("result_file_intrinsic", result_file_intrinsic_, std::string("/home/catkin_ws/src/mono_cam_calib/result/"));
-    priv_nh.param<std::string>("result_file_RT", result_file_RT_, std::string("/home/catkin_ws/src/mono_cam_calib/result/RT.txt"));
+    priv_nh.param<std::string>("result_file_RT", result_file_RT_, std::string("/home/catkin_ws/src/mono_cam_calib/result/"));
 }
 
 #endif
