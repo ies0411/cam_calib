@@ -119,14 +119,28 @@ void setCalibEnv::calibRawimage(const sensor_msgs::Image::ConstPtr &msg) {
                   << distCoeffs << std::endl;
     }
 
-    // TODO txt -> YAML or Json
+    // COMPLETE #1 : Convert to Json
+    // TODO : use templete and make function
+    Json::Value root;
+    for (int i = 0; i < cameraMatrix.rows; i++) {
+        for (int j = 0; j < cameraMatrix.cols; j++) {
+            root["intrinsic"][i].append(cameraMatrix.at<double>(i, j));
+        }
+    }
+
+    Json::StyledWriter writer;
+    auto str = writer.write(root);
+
+    std::ofstream output_file(result_file_intrinsic_ + "intrinsic_param.json", std::ofstream::out | std::ofstream::trunc);
+    output_file << str;
+    output_file.close();
 
     std::ofstream results;
-    results.open(result_file_intrinsic_, std::ofstream::out | std::ofstream::trunc);
+    results.open(result_file_intrinsic_ + "intrinsic_param.txt", std::ofstream::out | std::ofstream::trunc);
     results << cameraMatrix << "\n"
             << distCoeffs;
     results.close();
-    results.open(result_file_RT_, std::ofstream::out | std::ofstream::trunc);
+    results.open(result_file_RT_ + "RT.txt", std::ofstream::out | std::ofstream::trunc);
     results << R << "\n======\n"
             << T;
     results.close();

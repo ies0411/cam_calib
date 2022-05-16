@@ -15,7 +15,11 @@ find_package(catkin REQUIRED COMPONENTS
    std_msgs
 )
 find_package(OpenCV REQUIRED)
-
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(JSONCPP jsoncpp)
+# include_directories(${JSONCPP_INCLUDE_DIRS})
+# link_libraries(${JSONCPP_LIBRARIES})
+# target_link_libraries(object ${jsoncpp_LIBRARIES})
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
 
@@ -109,6 +113,7 @@ include_directories(
 include
   ${catkin_INCLUDE_DIRS}
   ${OpenCV_INCLUDE_DIRS}
+  # ${JSONCPP_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library
@@ -140,7 +145,7 @@ add_dependencies(mono_cam_calib ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXP
 #add_dependencies(pix_utm_odometry_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 ## Specify libraries to link a library or executable target against
 target_link_libraries(mono_cam_calib
-  ${catkin_LIBRARIES} ${OpenCV_LIBRARIES}
+  ${catkin_LIBRARIES} ${OpenCV_LIBRARIES} ${JSONCPP_LIBRARIES}
 )
 
 
