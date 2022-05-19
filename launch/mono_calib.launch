@@ -1,10 +1,11 @@
 <launch>
   <node  pkg="mono_cam_calib" name="mono_cam_calib" type="mono_cam_calib" output="screen">
 
-  	<param name = "dx" type="double" value="61.5"/>
-  	<param name = "dy" type="double" value="61.5"/>
-  	<param name = "checker_x_number" type = "int" value = "9" />
+  	<param name = "dx" type="double" value="38"/>
+  	<param name = "dy" type="double" value="38"/>
+  	<param name = "checker_x_number" type = "int" value = "8" />
   	<param name = "checker_y_number" type = "int" value = "6" />
+		<param name = "image_file" type = "bool" value = "true" />
     <param name = "result_file_intrinsic" type="string" value="$(find mono_cam_calib)/result/"/>
 		<param name = "result_file_RT" type="string" value="$(find mono_cam_calib)/result/"/>
 		<param name = "view_num" type="int" value="10"/>

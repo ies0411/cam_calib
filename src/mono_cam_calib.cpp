@@ -172,12 +172,28 @@ int main(int argc, char *argv[]) {
     ros::init(argc, argv, "calib_node");
     ros::NodeHandle nh("~");
     setCalibEnv calib(nh);
-
     ros::Rate rate(100);
+    int idx = 0, size;
+    std::vector<cv::String> images;
+    if (calib.getImagefileStatus()) {
+        cv::glob(calib.getImagefilepath(), images);
+        size = images.size();
+        std::cout << "number of images : " << size << std::endl;
+    }
+
     while (ros::ok()) {
         // return when finishing calibration
+        if (calib.getImagefileStatus()) {
+            cv::Mat frame = cv::imread(images[idx++]);
+            calib.convertCVtoROS(frame);
+            calib.publishImg();
+            if (idx == size) {
+                calib.setStatus(true);
+            }
+        }
         if (calib.getStatus()) break;
         ros::spinOnce();
+        rate.sleep();
     }
 
     return 0;
