@@ -12,6 +12,8 @@ find_package(catkin REQUIRED COMPONENTS
 )
 
 find_package(OpenCV REQUIRED)
+find_package(Ceres REQUIRED)
+
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(JSONCPP jsoncpp)
 
@@ -39,6 +41,7 @@ include_directories(
   include
   ${catkin_INCLUDE_DIRS}
   ${OpenCV_INCLUDE_DIRS}
+  ${CERES_INCLUDE_DIRS}
 
   # ${JSONCPP_INCLUDE_DIRS}
 )
@@ -50,9 +53,9 @@ add_dependencies(mono_cam_calib ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXP
 add_dependencies(stereo_cam_calib ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 target_link_libraries(mono_cam_calib
-  ${catkin_LIBRARIES} ${OpenCV_LIBRARIES} ${JSONCPP_LIBRARIES}
+  ${catkin_LIBRARIES} ${OpenCV_LIBRARIES} ${JSONCPP_LIBRARIES} ${CERES_LIBRARIES}
 )
 
 target_link_libraries(stereo_cam_calib
-  ${catkin_LIBRARIES} ${OpenCV_LIBRARIES} ${JSONCPP_LIBRARIES}
+  ${catkin_LIBRARIES} ${OpenCV_LIBRARIES} ${JSONCPP_LIBRARIES} ${CERES_LIBRARIES}
 )

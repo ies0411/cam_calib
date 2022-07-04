@@ -12,6 +12,9 @@
 #ifndef __MONO_H__
 #define __MONO_H__
 
+#include <ceres/ceres.h>
+#include <ceres/covariance.h>
+#include <ceres/rotation.h>
 #include <cv_bridge/cv_bridge.h>
 #include <jsoncpp/json/config.h>
 #include <jsoncpp/json/json.h>
@@ -21,6 +24,7 @@
 #include <sensor_msgs/Image.h>
 #include <stdio.h>
 
+#include <Eigen/Dense>
 #include <algorithm>
 #include <array>
 #include <eigen3/Eigen/Core>
@@ -33,7 +37,6 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/opencv_modules.hpp>
 #include <vector>
-
 enum CHECK_MOVEMENT {
     _NOT_ENOUGH_X,
     _NOT_ENOUGH_Y,
@@ -52,7 +55,7 @@ class setCalibEnv {
 
     int checkerboard_rows_num_, checkerboard_colm_num_;
     std::string image_sub_name_, result_file_intrinsic_, result_file_RT_, result_file_type_, load_path_, save_path;  // MEMO, result file type : 1. json, 2.txt
-    double dx_, dy_;  // MEMO . unit : mm
+    double dx_, dy_;                                                                                                 // MEMO . unit : mm
     int view_cnt_ = 0, view_num_threshold_ = 0;
     bool finish_ = false, RT_debug_, intrinsic_debug_, is_image_file_;
 

@@ -87,6 +87,7 @@ void setCalibEnv::calibStereoRawimage(const cam_calib::stereo::ConstPtr& msg) {
 }
 
 int main(int argc, char* argv[]) {
+    // TODO : rosbag 추가
     ros::init(argc, argv, "stereo_node");
     ros::NodeHandle nh("~");
     setCalibEnv calib(nh);

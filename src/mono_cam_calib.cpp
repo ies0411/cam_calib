@@ -106,6 +106,31 @@ void setCalibEnv::calibRawimage(const sensor_msgs::Image::ConstPtr &msg) {
 
     cv::Mat cameraMatrix, distCoeffs, R, T;
     cv::calibrateCamera(objpoints_, imgpoints_, cv::Size(gray.cols, gray.rows), cameraMatrix, distCoeffs, R, T);
+    Eigen::Matrix3d R_eigen;
+    Eigen::Vector3d T_eigen, axis_angle;
+    cv::cv2eigen(R, R_eigen);
+    cv::cv2eigen(T, T_eigen);
+
+    ceres::RotationMatrixToAngleAxis(R_eigen.data(), axis_angle.data());
+    Eigen::Vector3d rpy_init = R_eigen.eulerAngles(0, 1, 2) * 180 / M_PI;  //두개 결과 다른지 확인
+    Eigen::Vector3d tran_init;
+
+    Eigen::VectorXd R_T(6);
+    R_T(0) = axis_angle(0);
+    R_T(1) = axis_angle(1);
+    R_T(2) = axis_angle(2);
+    R_T(3) = T_eigen(0);
+    R_T(4) = T_eigen(1);
+    R_T(5) = T_eigen(2);
+
+    // ceres::LossFunction *loss_function = NULL;  //바꾸기
+    // ceres::Problem problem;
+    // problem.AddParameterBlock(R_T.data(), 6);
+    // for (int i = 0; i < 100; i++) {  // TODO : change max size
+    //     Ceres::CostFunction *cost_function = new ceres::AutoDiffCostFunction<CalibrationErrorTerm, 1, 6>(new CalibrationErrorTerm());
+    //     problem.AddResidualBlock(cost_function, loss_function, R_t.data());
+    // }
+
     if (RT_debug_) {
         std::cout << "R : "
                   << R << std::endl;
